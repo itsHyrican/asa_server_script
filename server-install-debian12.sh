@@ -104,7 +104,7 @@ sudo -u ark_scorched tar -x -C "$STEAMDIR/compatibilitytools.d/" -f "/opt/game-r
 # Install the systemd service file for ARK Survival Ascended Dedicated Server (Island)
 cat > /etc/systemd/system/ark-scorched2.service <<EOF
 [Unit]
-Description=ASA: The Island (new)
+Description=ASA: Scorched Earth
 After=network.target
 
 [Service]
@@ -117,7 +117,7 @@ WorkingDirectory=$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Serv
 Environment=XDG_RUNTIME_DIR=/run/user/$(id -u)
 Environment="STEAM_COMPAT_CLIENT_INSTALL_PATH=$STEAMDIR"
 Environment="STEAM_COMPAT_DATA_PATH=$STEAMDIR/steamapps/compatdata/2430930"
-ExecStart=$STEAMDIR/compatibilitytools.d/$PROTON_NAME/proton run ArkAscendedServer.exe TheIsland_WP?listen
+ExecStart=$STEAMDIR/compatibilitytools.d/$PROTON_NAME/proton run ArkAscendedServer.exe ScorchedEarth_WP?listenPort=7778 -mods=929800,928793,937546,934749,950914,939228,947033,935408
 Restart=on-failure
 RestartSec=20s
 
