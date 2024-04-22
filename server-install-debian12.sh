@@ -70,20 +70,20 @@ fi
 # Create a "steam" user account
 # This will create the account with no password, so if you need to log in with this user,
 # run `sudo passwd steam` to set a password.
-[ -d /home/steam ] || useradd -m -U steam
+[ -d /home/ark_island ] || useradd -m -U ark_island
 
 
 # Install ARK Survival Ascended Dedicated
-sudo -u steam /usr/games/steamcmd +login anonymous +app_update 2430930 validate +quit
+sudo -u ark_island /usr/games/steamcmd +login anonymous +app_update 2430930 validate +quit
 
 
 # Determine where Steam is installed
 # sometimes it's in ~/Steam, whereas other times it's in ~/.local/share/Steam
 # @todo figure out why.... this is annoying.
-if [ -e "/home/steam/Steam" ]; then
-  STEAMDIR="/home/steam/Steam"
-elif [ -e "/home/steam/.local/share/Steam" ]; then
-  STEAMDIR="/home/steam/.local/share/Steam"
+if [ -e "/home/ark_island/Steam" ]; then
+  STEAMDIR="/home/ark_island/Steam"
+elif [ -e "/home/ark_island/.local/share/Steam" ]; then
+  STEAMDIR="/home/ark_island/.local/share/Steam"
 else
   echo "Unable to guess where Steam is installed." >&2
   exit 1
@@ -91,27 +91,27 @@ fi
 
 
 # Extract GE Proton into this user's Steam path
-[ -d "$STEAMDIR/compatibilitytools.d" ] || sudo -u steam mkdir -p "$STEAMDIR/compatibilitytools.d"
-sudo -u steam tar -x -C "$STEAMDIR/compatibilitytools.d/" -f "/opt/game-resources/$PROTON_TGZ"
+[ -d "$STEAMDIR/compatibilitytools.d" ] || sudo -u ark_island mkdir -p "$STEAMDIR/compatibilitytools.d"
+sudo -u ark_island tar -x -C "$STEAMDIR/compatibilitytools.d/" -f "/opt/game-resources/$PROTON_TGZ"
 
 
 # Install default prefix into game compatdata path
-[ -d "$STEAMDIR/steamapps/compatdata" ] || sudo -u steam mkdir -p "$STEAMDIR/steamapps/compatdata"
+[ -d "$STEAMDIR/steamapps/compatdata" ] || sudo -u ark_island mkdir -p "$STEAMDIR/steamapps/compatdata"
 [ -d "$STEAMDIR/steamapps/compatdata/2430930" ] || \
-  sudo -u steam cp "$STEAMDIR/compatibilitytools.d/$PROTON_NAME/files/share/default_pfx" "$STEAMDIR/steamapps/compatdata/2430930" -r
+  sudo -u ark_island cp "$STEAMDIR/compatibilitytools.d/$PROTON_NAME/files/share/default_pfx" "$STEAMDIR/steamapps/compatdata/2430930" -r
 
 
 # Install the systemd service file for ARK Survival Ascended Dedicated Server (Island)
-cat > /etc/systemd/system/ark-island.service <<EOF
+cat > /etc/systemd/system/ark-island2.service <<EOF
 [Unit]
-Description=ARK Survival Ascended Dedicated Server (Island)
+Description=ASA: The Island (new)
 After=network.target
 
 [Service]
 Type=simple
 LimitNOFILE=10000
-User=steam
-Group=steam
+User=ark_island
+Group=ark_island
 ExecStartPre=/usr/games/steamcmd +login anonymous +app_update 2430930 validate +quit
 WorkingDirectory=$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame/Binaries/Win64
 Environment=XDG_RUNTIME_DIR=/run/user/$(id -u)
@@ -131,11 +131,11 @@ systemctl start ark-island
 
 
 # Create some helpful links for the user.
-[ -e "/home/steam/island-GameUserSettings.ini" ] || \
-  sudo -u steam ln -s "$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini" /home/steam/island-GameUserSettings.ini
+[ -e "/home/ark_island/island-GameUserSettings.ini" ] || \
+  sudo -u ark_island ln -s "$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini" /home/ark_island/island-GameUserSettings.ini
 
-[ -e "/home/steam/island-ShooterGame.log" ] || \
-  sudo -u steam ln -s "$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame/Saved/Logs/ShooterGame.log" /home/steam/island-ShooterGame.log
+[ -e "/home/ark_island/island-ShooterGame.log" ] || \
+  sudo -u ark_island ln -s "$STEAMDIR/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame/Saved/Logs/ShooterGame.log" /home/ark_island/island-ShooterGame.log
 
 echo "================================================================================"
 echo "If everything went well, ARK Survival Ascended should be installed and starting!"
@@ -144,4 +144,4 @@ echo "To restart the server: sudo systemctl restart ark-island"
 echo "To start the server:   sudo systemctl start ark-island"
 echo "To stop the server:    sudo systemctl stop ark-island"
 echo ""
-echo "Configuration is available in /home/steam/island-GameUserSettings.ini"
+echo "Configuration is available in /home/ark_island/island-GameUserSettings.ini"
