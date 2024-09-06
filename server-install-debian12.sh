@@ -74,7 +74,7 @@ fi
 
 
 # Install ARK Survival Ascended Dedicated
-sudo -u  /usr/games/steamcmd +login anonymous +app_update 2430930 validate +quit
+sudo -u ark_aberration /usr/games/steamcmd +login anonymous +app_update 2430930 validate +quit
 
 
 # Determine where Steam is installed
